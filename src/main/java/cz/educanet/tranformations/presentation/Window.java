@@ -1,5 +1,6 @@
 package cz.educanet.tranformations.presentation;
 
+import cz.educanet.tranformations.logic.Battlefield;
 import cz.educanet.tranformations.presentation.canvas.Canvas;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.util.TimerTask;
 
 public class Window extends JFrame {
 
-    public Window(int width, int height, String title) {
+    public Window(int width, int height, String title, Battlefield battlefield, int size) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(width, height);
         setVisible(true);
@@ -17,7 +18,7 @@ public class Window extends JFrame {
         root.setLayout(new BoxLayout(root, BoxLayout.PAGE_AXIS));
         root.setSize(width, height);
 
-        JPanel canvas = new Canvas();
+        JPanel canvas = new Canvas(battlefield, size);
         root.add(canvas);
 
         add(root);

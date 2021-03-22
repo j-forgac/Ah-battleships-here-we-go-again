@@ -1,11 +1,12 @@
 package cz.educanet.tranformations;
 
+import cz.educanet.tranformations.logic.Battlefield;
 import cz.educanet.tranformations.presentation.Window;
 
 public class Main {
 
     public static void main(String[] args) {
-        new Window(800, 600, "Fragment shader example");
+        new Window(800, 600, "Fragment shader example", null, 5);
     }
 
 }
