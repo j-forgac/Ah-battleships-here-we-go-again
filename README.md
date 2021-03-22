@@ -3,5 +3,5 @@
 * V terminalu si zvolíte velikost pole
 * Pole obsahuje lodě 5 rozměrů (1-5)
 * Pozice a směr lodí se náhodně generuje
-* Až zlikvidujete všechny lodě, tak v terminalu váš počet tahů
+* Až zlikvidujete všechny lodě, tak v terminalu bude váš počet tahů
 
