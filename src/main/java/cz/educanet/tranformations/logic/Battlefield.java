@@ -5,6 +5,7 @@ import java.util.*;
 public class Battlefield {
 	static int height;
 	public Field[][] battlefield;
+	public int score = 0;
 
 
 	public Battlefield(int dimensions) {
@@ -88,10 +89,15 @@ public class Battlefield {
 		int attackCooX = tile1;
 		int attackCooY = tile2;
 		switch (battlefield[attackCooY][attackCooX].getType()) {
-			case "WATER" -> battlefield[attackCooY][attackCooX] = Field.createMiss();
-			case "SHIP" -> battlefield[attackCooY][attackCooX] = Field.createHit();
+			case "WATER" -> {
+				battlefield[attackCooY][attackCooX] = Field.createMiss();
+				score++;
+			}
+			case "SHIP" -> {
+				battlefield[attackCooY][attackCooX] = Field.createHit();
+				score++;
+			}
 		}
-
 
 		for (int x = 0; x < height; x++) {
 			for (int y = 0; y < height; y++) {
