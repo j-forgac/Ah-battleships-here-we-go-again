@@ -1,37 +1,40 @@
 package cz.educanet.tranformations.logic;
 
+import cz.educanet.tranformations.logic.models.Coordinate;
+
 import java.util.*;
 
 public class Battlefield {
 	static int height;
 	public Field[][] battlefield;
 	public int score = 0;
+	boolean debugging = false;
 
 
 	public Battlefield(int dimensions) {
 		height = dimensions;
 		battlefield = new Field[height][height];
 
-		myFor(new CallBack() {
-			public void call(int x, int y) {
+		for (int x = 0; x < height; x++) {
+			for (int y = 0; y < height; y++) {
 				battlefield[x][y] = Field.createWater();
 			}
-		});
+		}
 	}
 
 	public void placeShips() {
 		boolean direction;
 		int maxBoatSize = Math.min(height, 5);
-		ArrayList<Integer[]> possibleCoos;
+		ArrayList<Coordinate> possibleCoos;
 		for (int boatSize = maxBoatSize; boatSize >= 1; boatSize--) {
 			possibleCoos = generateOrder(height);
 			direction = new Random().nextBoolean();
 			shipBuilt:
 			for (int dir = 0; dir < 2; dir++) {
 				direction = !direction;
-				for (Integer[] possibleCoo : possibleCoos) {
-					int cooX = possibleCoo[0];
-					int cooY = possibleCoo[1];
+				for (Coordinate possibleCoo : possibleCoos) {
+					int cooX = possibleCoo.getX();
+					int cooY = possibleCoo.getY();
 					if (fitsInMap(cooX, boatSize) && notCollidingWithOtherShips(cooX, cooY, boatSize)) {
 						if (fitsInMap(cooY, boatSize) && notCollidingWithOtherShips(cooX, cooY, boatSize)) {
 							if (direction) {
@@ -61,12 +64,12 @@ public class Battlefield {
 
 	public boolean notCollidingWithOtherShips(int cooX, int cooY, int boatLength) {
 		for (int y = cooY; y < cooY + boatLength && y < height; y++) {
-			if (this.battlefield[y][cooX].getType() != "WATER") {
+			if (!this.battlefield[y][cooX].getType().equals(Field.tileType.WATER)) {
 				return false;
 			}
 		}
 		for (int x = cooX; x < cooX + boatLength && x < height; x++) {
-			if (this.battlefield[cooY][x].getType() != "WATER") {
+			if (!this.battlefield[cooY][x].getType().equals(Field.tileType.WATER)) {
 				return false;
 			}
 		}
@@ -85,23 +88,24 @@ public class Battlefield {
 		}
 	}
 
-	public boolean evaluateAttack(int tile1, int tile2) {
-		int attackCooX = tile1;
-		int attackCooY = tile2;
-		switch (battlefield[attackCooY][attackCooX].getType()) {
-			case "WATER" -> {
-				battlefield[attackCooY][attackCooX] = Field.createMiss();
+	public boolean evaluateAttack(Coordinate coordinate) {
+		//* checks if won + shoots at coordinate
+		int attackCooX = coordinate.getY();
+		int attackCooY = coordinate.getX();
+		switch (battlefield[attackCooX][attackCooY].getType()) {
+			case WATER -> {
+				battlefield[attackCooX][attackCooY] = Field.createMiss();
 				score++;
 			}
-			case "SHIP" -> {
-				battlefield[attackCooY][attackCooX] = Field.createHit();
+			case SHIP -> {
+				battlefield[attackCooX][attackCooY] = Field.createHit();
 				score++;
 			}
 		}
 
 		for (int x = 0; x < height; x++) {
 			for (int y = 0; y < height; y++) {
-				if (battlefield[x][y].getType() == "SHIP") {
+				if (battlefield[x][y].getType() == Field.tileType.SHIP) {
 					return true;
 				}
 			}
@@ -109,11 +113,15 @@ public class Battlefield {
 		return false;
 	}
 
-	private ArrayList<Integer[]> generateOrder(int uniqueElements) {
-		ArrayList<Integer[]> output = new ArrayList<>();
+	public Field.tileType getTileByCoordinate(Coordinate coordinate) {
+		return battlefield[coordinate.getX()][coordinate.getY()].getType();
+	}
+
+	private ArrayList<Coordinate> generateOrder(int uniqueElements) {
+		ArrayList<Coordinate> output = new ArrayList<>();
 		for (int num1 = 0; num1 < uniqueElements; num1++) {
 			for (int num2 = 0; num2 < uniqueElements; num2++) {
-				output.add(new Integer[]{num1, num2});
+				output.add(new Coordinate(num1, num2));
 			}
 		}
 		Collections.shuffle(output);
@@ -124,6 +132,17 @@ public class Battlefield {
 		for (int x = 0; x < height; x++) {
 			for (int y = 0; y < height; y++) {
 				callBack.call(x, y);
+			}
+		}
+	}
+
+	public void draw() {
+		if (debugging) {
+			for (Field[] fields : battlefield) {
+				System.out.println();
+				for (int y = 0; y < battlefield.length; y++) {
+					System.out.print(" " + fields[y].getType() + " ");
+				}
 			}
 		}
 	}

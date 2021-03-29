@@ -2,6 +2,7 @@ package cz.educanet.tranformations.presentation.canvas;
 
 import cz.educanet.tranformations.logic.Battlefield;
 import cz.educanet.tranformations.logic.models.Coordinate;
+import cz.educanet.tranformations.logic.Field.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,9 +25,10 @@ public class Canvas extends JPanel {
 		setBackground(Color.BLACK);
 
 		addMouseListener(new CanvasMouseListener((x, y, button) -> {
+			battlefield.draw();
 			if (notWon) {
 				Coordinate c = new Coordinate(x / cellWidth, y / cellHeight);
-				notWon = battlefield.evaluateAttack(c.getY(), c.getX());
+				notWon = battlefield.evaluateAttack(c);
 			} else {
 				System.out.println("Vsechny lode zniceny, vas pocet tahu: " + battlefield.score);
 			}
@@ -42,19 +44,18 @@ public class Canvas extends JPanel {
 		super.paint(g);
 		cellWidth = (getSize().width - 1) / SCREEN_WIDTH;
 		cellHeight = getSize().height / SCREEN_HEIGHT;
-
 		for (int i = 0; i < SCREEN_WIDTH; i++) {
 			for (int j = 0; j < SCREEN_HEIGHT; j++) {
 				Coordinate cell = new Coordinate(j, i);
-				switch (battlefield.battlefield[cell.getY()][cell.getX()].getType()) {
-					case "MISS" -> {
+				switch (battlefield.getTileByCoordinate(cell)) {
+					case MISS -> {
 						if ((notWon)) {
 							g.setColor(new Color(255, 0, 0));
 						} else {
 							g.setColor(new Color(0, 102, 255));
 						}
 					}
-					case "HIT" -> {
+					case HIT -> {
 						if ((notWon)) {
 							g.setColor(new Color(255, 213, 0));
 						} else {
