@@ -18,10 +18,10 @@ public class Canvas extends JPanel {
 	private boolean notWon = true;
 	boolean dontStop = true;
 
-	public Canvas(Battlefield battlefield, int size) {
+	public Canvas(Battlefield battlefield) {
 		this.battlefield = battlefield;
-		SCREEN_WIDTH = size;
-		SCREEN_HEIGHT = size;
+		SCREEN_WIDTH = battlefield.getHeight();
+		SCREEN_HEIGHT = battlefield.getHeight();
 		setBackground(Color.BLACK);
 
 		addMouseListener(new CanvasMouseListener((x, y, button) -> {
@@ -62,7 +62,7 @@ public class Canvas extends JPanel {
 							g.setColor(new Color(8, 255, 0));
 						}
 					}
-					default -> g.setColor(new Color(0, 102, 255));
+					case UNKNOWN -> g.setColor(new Color(0, 102, 255));
 				}
 				g.fillRect(i * cellWidth, j * cellHeight, cellWidth, cellHeight);
 

@@ -16,6 +16,6 @@ public class MyGame{
         Battlefield pole1 = new Battlefield(size);
 
         pole1.placeShips();
-        new Window(800, 800, "Fragment shader example", pole1, size);
+        new Window(800, 800, "Battleships", pole1);
     }
 }

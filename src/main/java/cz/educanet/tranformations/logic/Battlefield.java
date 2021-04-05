@@ -5,10 +5,10 @@ import cz.educanet.tranformations.logic.models.Coordinate;
 import java.util.*;
 
 public class Battlefield {
-	static int height;
-	public Field[][] battlefield;
+	int height;
+	Field[][] battlefield;
 	public int score = 0;
-	boolean debugging = false;
+	boolean debugging = true;
 
 
 	public Battlefield(int dimensions) {
@@ -89,7 +89,7 @@ public class Battlefield {
 	}
 
 	public boolean evaluateAttack(Coordinate coordinate) {
-		//* checks if won + shoots at coordinate
+		//* checks for win + shoots at coordinate
 		int attackCooX = coordinate.getY();
 		int attackCooY = coordinate.getX();
 		switch (battlefield[attackCooX][attackCooY].getType()) {
@@ -113,8 +113,11 @@ public class Battlefield {
 		return false;
 	}
 
+	public int getHeight(){
+		return height;
+	}
 	public Field.tileType getTileByCoordinate(Coordinate coordinate) {
-		return battlefield[coordinate.getX()][coordinate.getY()].getType();
+		return battlefield[coordinate.getX()][coordinate.getY()].getTypeUserSide();
 	}
 
 	private ArrayList<Coordinate> generateOrder(int uniqueElements) {
@@ -128,14 +131,6 @@ public class Battlefield {
 		return output;
 	}
 
-	public static void myFor(CallBack callBack) {
-		for (int x = 0; x < height; x++) {
-			for (int y = 0; y < height; y++) {
-				callBack.call(x, y);
-			}
-		}
-	}
-
 	public void draw() {
 		if (debugging) {
 			for (Field[] fields : battlefield) {
@@ -145,9 +140,5 @@ public class Battlefield {
 				}
 			}
 		}
-	}
-
-	public interface CallBack {
-		public void call(int x, int y);
 	}
 }

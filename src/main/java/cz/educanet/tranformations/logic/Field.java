@@ -3,7 +3,7 @@ package cz.educanet.tranformations.logic;
 public class Field {
     tileType type;
     int dimensions;
-    public enum tileType {WATER, MISS, HIT, SHIP}
+    public enum tileType {WATER, MISS, HIT, SHIP, UNKNOWN}
 
     public Field (tileType type, int dimensions){
         this.type = type;
@@ -14,30 +14,31 @@ public class Field {
     }
 
     public static Field createWater(){
-        Field water = new Field(tileType.WATER);
-        return water;
+        return new Field(tileType.WATER);
     }
 
     public static Field createMiss(){
-        Field miss = new Field(tileType.MISS);
-        return miss;
+        return new Field(tileType.MISS);
     }
 
     public static Field createHit(){
-        Field hit = new Field(tileType.HIT);
-        return hit;
+        return new Field(tileType.HIT);
     }
 
     public static Field createShip(int dimensions){
-        Field ship = new Field(tileType.SHIP, dimensions);
-        return ship;
+        return new Field(tileType.SHIP, dimensions);
     }
+
 
     public tileType getType(){
         return this.type;
     }
 
-    public int getDimensions(){
-        return this.dimensions;
+    public tileType getTypeUserSide(){
+        if(this.type == tileType.SHIP || this.type == tileType.WATER){ // Battleships 3
+            return tileType.UNKNOWN;
+        } else {
+            return this.type;
+        }
     }
 }
