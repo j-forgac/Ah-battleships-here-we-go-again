@@ -55,14 +55,15 @@ public class Canvas extends JPanel {
 							g.setColor(new Color(0, 102, 255));
 						}
 					}
-					case HIT -> {
+					case HIT -> g.setColor(new Color(255, 213, 0));
+					case UNKNOWN -> g.setColor(new Color(0, 102, 255));
+					case SUNK -> {
 						if ((notWon)) {
-							g.setColor(new Color(255, 213, 0));
+							g.setColor(new Color(133, 233, 0));
 						} else {
-							g.setColor(new Color(8, 255, 0));
+							g.setColor(new Color(0, 255, 0));
 						}
 					}
-					case UNKNOWN -> g.setColor(new Color(0, 102, 255));
 				}
 				g.fillRect(i * cellWidth, j * cellHeight, cellWidth, cellHeight);
 

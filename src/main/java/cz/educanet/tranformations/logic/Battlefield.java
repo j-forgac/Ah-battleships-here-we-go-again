@@ -9,9 +9,24 @@ public class Battlefield {
 	Field[][] battlefield;
 	public int score = 0;
 	boolean debugging = true;
+	HashMap<String, Integer> customBoats = new HashMap<>();
+	HashMap<String, Integer> notSunkShips = new HashMap<>();
 
 
 	public Battlefield(int dimensions) {
+				/* {boat size, id} - due to multiple boats of the same size
+			{"5", "5"},
+			{"4", "4"},
+			{"3a", "3"},
+			{"3b", "3"},
+			{"2", "2"}
+	};  only in descending size sequence*/
+		customBoats.put("5a",5);
+		customBoats.put("4a",4);
+		customBoats.put("3a",3);
+		customBoats.put("3b",3);
+		customBoats.put("2a",2);
+		notSunkShips = customBoats;
 		height = dimensions;
 		battlefield = new Field[height][height];
 
@@ -25,8 +40,10 @@ public class Battlefield {
 	public void placeShips() {
 		boolean direction;
 		int maxBoatSize = Math.min(height, 5);
+		int boatSize;
 		ArrayList<Coordinate> possibleCoos;
-		for (int boatSize = maxBoatSize; boatSize >= 1; boatSize--) {
+		for (String boatId : customBoats.keySet()) {
+			boatSize = customBoats.get(boatId);
 			possibleCoos = generateOrder(height);
 			direction = new Random().nextBoolean();
 			shipBuilt:
@@ -35,74 +52,106 @@ public class Battlefield {
 				for (Coordinate possibleCoo : possibleCoos) {
 					int cooX = possibleCoo.getX();
 					int cooY = possibleCoo.getY();
-					if (fitsInMap(cooX, boatSize) && notCollidingWithOtherShips(cooX, cooY, boatSize)) {
-						if (fitsInMap(cooY, boatSize) && notCollidingWithOtherShips(cooX, cooY, boatSize)) {
+					boolean canBeBuiltY = canBeBuilt(true, cooX, cooY, boatSize);
+					boolean canBeBuiltX = canBeBuilt(false, cooX, cooY, boatSize);
+					if (canBeBuiltX || canBeBuiltY) {
+						if (canBeBuiltX && canBeBuiltY){
 							if (direction) {
-								buildShipV(cooX, cooY, boatSize);
+								buildShipV(cooX, cooY, boatSize, boatId);
 							} else {
-								buildShipH(cooX, cooY, boatSize);
+								buildShipH(cooX, cooY, boatSize, boatId);
 							}
+						} else if (canBeBuiltX){
+							buildShipV(cooX, cooY, boatSize, boatId);
 						} else {
-							buildShipH(cooX, cooY, boatSize);
+							buildShipH(cooX, cooY, boatSize, boatId);
 						}
 						break shipBuilt;
-					} else {
-						if (fitsInMap(cooY, boatSize) && notCollidingWithOtherShips(cooX, cooY, boatSize)) {
-							buildShipV(cooX, cooY, boatSize);
-							break shipBuilt;
-						}
 					}
 				}
 			}
 		}
 	}
 
-	public boolean fitsInMap(int coos, int boatLength) {
-		int boundaries = this.battlefield.length;
-		return coos + boatLength <= boundaries;
-	}
-
-	public boolean notCollidingWithOtherShips(int cooX, int cooY, int boatLength) {
-		for (int y = cooY; y < cooY + boatLength && y < height; y++) {
-			if (!this.battlefield[y][cooX].getType().equals(Field.tileType.WATER)) {
+	public boolean canBeBuilt(boolean axis, int cooX, int cooY, int boatLength) { //* true = X false = Y
+		if (axis) {
+			try { //* check if colliding with other ships
+				for (int x = cooX; x < cooX + boatLength; x++) {
+					if (this.battlefield[cooY][x].getType() != Field.tileType.WATER) {
+						return false;
+					}
+				}
+			} catch (Exception e) { //* doesn't fit in map
 				return false;
 			}
-		}
-		for (int x = cooX; x < cooX + boatLength && x < height; x++) {
-			if (!this.battlefield[cooY][x].getType().equals(Field.tileType.WATER)) {
+		} else {
+			try {
+				for (int y = cooY; y < cooY + boatLength; y++) {
+					if (this.battlefield[y][cooX].getType() != Field.tileType.WATER) {
+						return false;
+					}
+				}
+			} catch (Exception e) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public void buildShipH(int cooX, int cooY, int boatLength) {
+	public void buildShipH(int cooX, int cooY, int boatLength, String id) { //horizontal ship
 		for (int x = cooX; x < cooX + boatLength; x++) {
-			this.battlefield[cooY][x] = Field.createShip(boatLength);
+			this.battlefield[cooY][x] = Field.createShip(boatLength, id);
 		}
 	}
 
-	public void buildShipV(int cooX, int cooY, int boatLength) {
+	public void buildShipV(int cooX, int cooY, int boatLength, String id) { //vertical ship
 		for (int y = cooY; y < cooY + boatLength; y++) {
-			this.battlefield[y][cooX] = Field.createShip(boatLength);
+			this.battlefield[y][cooX] = Field.createShip(boatLength, id);
 		}
 	}
 
 	public boolean evaluateAttack(Coordinate coordinate) {
-		//* checks for win + shoots at coordinate
+		//* shoots at coordinate
 		int attackCooX = coordinate.getY();
 		int attackCooY = coordinate.getX();
+		String possibleSunkShipId;
+		boolean sunk = true;
 		switch (battlefield[attackCooX][attackCooY].getType()) {
 			case WATER -> {
 				battlefield[attackCooX][attackCooY] = Field.createMiss();
 				score++;
 			}
 			case SHIP -> {
-				battlefield[attackCooX][attackCooY] = Field.createHit();
+				possibleSunkShipId = battlefield[attackCooX][attackCooY].getId();
+				battlefield[attackCooX][attackCooY] = Field.createHit(possibleSunkShipId);
 				score++;
+				//* checks if ship's been sunk
+				loop:
+				for (int x = 0; x < height; x++) {
+					for (int y = 0; y < height; y++) {
+						if (battlefield[x][y].getId().equals(possibleSunkShipId) && battlefield[x][y].getType() == Field.tileType.SHIP) {
+							System.out.println("not-sunk");
+							sunk = false;
+							break loop;
+						}
+					}
+				}
+				if(sunk){
+					for (int x = 0; x < height; x++) {
+						for (int y = 0; y < height; y++) {
+							if (battlefield[x][y].getId().equals(possibleSunkShipId) && battlefield[x][y].getType() == Field.tileType.HIT) {
+								battlefield[x][y] = Field.createSunk();
+								notSunkShips.remove(battlefield[x][y].getId());
+							}
+						}
+					}
+				}
 			}
 		}
+		return checkWin();
+	}
 
+	public boolean checkWin(){
 		for (int x = 0; x < height; x++) {
 			for (int y = 0; y < height; y++) {
 				if (battlefield[x][y].getType() == Field.tileType.SHIP) {
@@ -136,7 +185,7 @@ public class Battlefield {
 			for (Field[] fields : battlefield) {
 				System.out.println();
 				for (int y = 0; y < battlefield.length; y++) {
-					System.out.print(" " + fields[y].getType() + " ");
+					System.out.print(" " + fields[y].getType() + " " + fields[y].getDimensions());
 				}
 			}
 		}
