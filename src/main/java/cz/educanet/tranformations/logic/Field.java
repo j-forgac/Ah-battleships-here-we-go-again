@@ -28,7 +28,6 @@ public class Field {
     }
 
     public static Field createShip(int dimensions, String id){
-        System.out.println(id);
         return new Field(tileType.SHIP, dimensions, id);
     }
 
@@ -43,7 +42,6 @@ public class Field {
     }
 
     public String getId(){
-        System.out.println(id);
         return this.id;
     }
     public int getDimensions(){

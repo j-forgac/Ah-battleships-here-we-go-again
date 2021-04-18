@@ -1,8 +1,10 @@
 package cz.educanet.tranformations.presentation.canvas;
 
+import cz.educanet.tranformations.logic.ArtificialStupidity;
 import cz.educanet.tranformations.logic.Battlefield;
+import cz.educanet.tranformations.logic.Field;
+import cz.educanet.tranformations.logic.MyGame;
 import cz.educanet.tranformations.logic.models.Coordinate;
-import cz.educanet.tranformations.logic.Field.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,44 +14,35 @@ public class Canvas extends JPanel {
 	private static int SCREEN_WIDTH;
 	private static int SCREEN_HEIGHT;
 	private Battlefield battlefield;
+	private ArtificialStupidity artificialIntelligence;
 
 	private int cellWidth;
 	private int cellHeight;
-	private boolean notWon = true;
-	boolean dontStop = true;
 
-	public Canvas(Battlefield battlefield) {
+	public Canvas(Battlefield battlefield, boolean interact) {
 		this.battlefield = battlefield;
 		SCREEN_WIDTH = battlefield.getHeight();
 		SCREEN_HEIGHT = battlefield.getHeight();
 		setBackground(Color.BLACK);
+		if (interact) {
+			addListener();
+		} else {
 
-		addMouseListener(new CanvasMouseListener((x, y, button) -> {
-			battlefield.draw();
-			if (notWon) {
-				Coordinate c = new Coordinate(x / cellWidth, y / cellHeight);
-				notWon = battlefield.evaluateAttack(c);
-			} else {
-				System.out.println("Vsechny lode zniceny, vas pocet tahu: " + battlefield.score);
-			}
-		}));
+		}
+
 	}
 
 	@Override
 	public void paint(Graphics g) {
-		if (!notWon && dontStop) {
-			dontStop = false;
-			System.out.println("Vsechny lode zniceny, vas pocet tahu: " + battlefield.score);
-		}
 		super.paint(g);
 		cellWidth = (getSize().width - 1) / SCREEN_WIDTH;
 		cellHeight = getSize().height / SCREEN_HEIGHT;
 		for (int i = 0; i < SCREEN_WIDTH; i++) {
 			for (int j = 0; j < SCREEN_HEIGHT; j++) {
-				Coordinate cell = new Coordinate(j, i);
+				Coordinate cell = new Coordinate(i, j);
 				switch (battlefield.getTileByCoordinate(cell)) {
 					case MISS -> {
-						if ((notWon)) {
+						if ((MyGame.winner == null)) {
 							g.setColor(new Color(255, 0, 0));
 						} else {
 							g.setColor(new Color(0, 102, 255));
@@ -58,7 +51,7 @@ public class Canvas extends JPanel {
 					case HIT -> g.setColor(new Color(255, 213, 0));
 					case UNKNOWN -> g.setColor(new Color(0, 102, 255));
 					case SUNK -> {
-						if ((notWon)) {
+						if ((MyGame.winner == null)) {
 							g.setColor(new Color(133, 233, 0));
 						} else {
 							g.setColor(new Color(0, 255, 0));
@@ -73,6 +66,18 @@ public class Canvas extends JPanel {
 
 			}
 		}
+	}
+
+	public void addListener() {
+		addMouseListener(new CanvasMouseListener((x, y, button) -> {
+			Coordinate c = new Coordinate(x / cellWidth, y / cellHeight);
+			if (MyGame.winner == null && battlefield.getPlayer().isOnMove() && battlefield.getTileByCoordinate(c) == Field.tileType.UNKNOWN) {
+				if (!battlefield.evaluateAttack(c)) {
+					MyGame.winner = this.battlefield.getPlayer();
+					System.out.println("Vsechny lode zniceny, vas pocet tahu: " + battlefield.score);
+				}
+			}
+		}));
 	}
 }
 

@@ -9,7 +9,7 @@ import java.util.TimerTask;
 
 public class Window extends JFrame {
 
-    public Window(int width, int height, String title, Battlefield battlefield) {
+    public Window(int width, int height, String title, Battlefield battlefield, boolean interact) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(width, height);
         setVisible(true);
@@ -18,7 +18,7 @@ public class Window extends JFrame {
         root.setLayout(new BoxLayout(root, BoxLayout.PAGE_AXIS));
         root.setSize(width, height);
 
-        JPanel canvas = new Canvas(battlefield);
+        JPanel canvas = new Canvas(battlefield, interact);
         root.add(canvas);
 
         add(root);

@@ -5,6 +5,7 @@ import cz.educanet.tranformations.logic.models.Coordinate;
 import java.util.*;
 
 public class Battlefield {
+	Player player;
 	int height;
 	Field[][] battlefield;
 	public int score = 0;
@@ -14,18 +15,11 @@ public class Battlefield {
 
 
 	public Battlefield(int dimensions) {
-				/* {boat size, id} - due to multiple boats of the same size
-			{"5", "5"},
-			{"4", "4"},
-			{"3a", "3"},
-			{"3b", "3"},
-			{"2", "2"}
-	};  only in descending size sequence*/
 		customBoats.put("5a",5);
 		customBoats.put("4a",4);
 		customBoats.put("3a",3);
 		customBoats.put("3b",3);
-		customBoats.put("2a",2);
+		customBoats.put("2a",2); //*only in descending order
 		notSunkShips = customBoats;
 		height = dimensions;
 		battlefield = new Field[height][height];
@@ -35,6 +29,14 @@ public class Battlefield {
 				battlefield[x][y] = Field.createWater();
 			}
 		}
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public Player getPlayer(){
+		return this.player;
 	}
 
 	public void placeShips() {
@@ -112,25 +114,24 @@ public class Battlefield {
 
 	public boolean evaluateAttack(Coordinate coordinate) {
 		//* shoots at coordinate
-		int attackCooX = coordinate.getY();
-		int attackCooY = coordinate.getX();
+		int attackCooX = coordinate.getX();
+		int attackCooY = coordinate.getY();
 		String possibleSunkShipId;
 		boolean sunk = true;
-		switch (battlefield[attackCooX][attackCooY].getType()) {
+		switch (battlefield[attackCooY][attackCooX].getType()) {
 			case WATER -> {
-				battlefield[attackCooX][attackCooY] = Field.createMiss();
+				battlefield[attackCooY][attackCooX] = Field.createMiss();
 				score++;
 			}
 			case SHIP -> {
-				possibleSunkShipId = battlefield[attackCooX][attackCooY].getId();
-				battlefield[attackCooX][attackCooY] = Field.createHit(possibleSunkShipId);
+				possibleSunkShipId = battlefield[attackCooY][attackCooX].getId();
+				battlefield[attackCooY][attackCooX] = Field.createHit(possibleSunkShipId);
 				score++;
 				//* checks if ship's been sunk
 				loop:
 				for (int x = 0; x < height; x++) {
 					for (int y = 0; y < height; y++) {
 						if (battlefield[x][y].getId().equals(possibleSunkShipId) && battlefield[x][y].getType() == Field.tileType.SHIP) {
-							System.out.println("not-sunk");
 							sunk = false;
 							break loop;
 						}
@@ -148,25 +149,29 @@ public class Battlefield {
 				}
 			}
 		}
-		return checkWin();
-	}
-
-	public boolean checkWin(){
+		//*check win
 		for (int x = 0; x < height; x++) {
 			for (int y = 0; y < height; y++) {
 				if (battlefield[x][y].getType() == Field.tileType.SHIP) {
+					switchPlayer();
 					return true;
 				}
 			}
 		}
+		switchPlayer();
 		return false;
 	}
 
 	public int getHeight(){
 		return height;
 	}
+
 	public Field.tileType getTileByCoordinate(Coordinate coordinate) {
-		return battlefield[coordinate.getX()][coordinate.getY()].getTypeUserSide();
+		return battlefield[coordinate.getY()][coordinate.getX()].getTypeUserSide();
+	}
+
+	public Field.tileType getRawTileByCoordinate(Coordinate coordinate) {
+		return battlefield[coordinate.getY()][coordinate.getX()].getType();
 	}
 
 	private ArrayList<Coordinate> generateOrder(int uniqueElements) {
@@ -187,6 +192,14 @@ public class Battlefield {
 				for (int y = 0; y < battlefield.length; y++) {
 					System.out.print(" " + fields[y].getType() + " " + fields[y].getDimensions());
 				}
+			}
+		}
+	}
+
+	private void switchPlayer() {
+		for (Player player: MyGame.players){
+			if(player != this.player){
+				MyGame.onMove = player;
 			}
 		}
 	}
