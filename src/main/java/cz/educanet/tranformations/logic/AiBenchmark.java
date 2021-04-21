@@ -1,13 +1,9 @@
 package cz.educanet.tranformations.logic;
 
-import cz.educanet.tranformations.logic.ArtificialIntelligence;
-import cz.educanet.tranformations.logic.Battlefield;
-import cz.educanet.tranformations.logic.MyGame;
-import cz.educanet.tranformations.logic.Player;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class AiBenchmark {
 
@@ -47,7 +43,7 @@ public class AiBenchmark {
 			}
 		}
 
-		System.out.println("Average moves taken to win: " + totalMoves / samples);
+		System.out.println("Average moves to win: " + totalMoves / samples);
 		if (samples % 2 != 0) {
 			System.out.println("Median = " + output2.get(samples / 2));
 		} else {
