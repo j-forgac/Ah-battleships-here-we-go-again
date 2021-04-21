@@ -142,7 +142,7 @@ public class Battlefield {
 							if (battlefield[x][y].getId().equals(possibleSunkShipId) && battlefield[x][y].getType() == Field.tileType.HIT) {
 								customBoats.remove(battlefield[x][y].getId());
 								battlefield[x][y] = Field.createSunk();
-								printShips();
+								//*printShips();
 							}
 						}
 					}

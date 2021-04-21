@@ -16,7 +16,7 @@ public class MyGame {
 		Scanner mySc = new Scanner(System.in);
 		int size = 0;
 		String playerType;
-		while (size < 1 || size > 26) {
+		while (size < 5 || size > 200) {
 			System.out.println("Zadejte vysku pole");
 			size = Integer.parseInt(mySc.nextLine());
 		}
@@ -42,10 +42,10 @@ public class MyGame {
 				playerType = mySc.nextLine();
 				if(playerType.equals("h")){
 					nonValid = false;
-					players[x-1] = new Player(battlefields[x-1], null);
+					players[x-1] = new Player(battlefields[x-1], null, false);
 				} else if(playerType.equals("a")){
 					nonValid = false;
-					players[x-1] = new Player(battlefields[x-1], new ArtificialIntelligence(battlefields[x-1]));
+					players[x-1] = new Player(battlefields[x-1], new ArtificialIntelligence(battlefields[x-1]), false);
 				}
 			}
 		}

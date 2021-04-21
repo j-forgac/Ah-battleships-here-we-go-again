@@ -9,10 +9,10 @@ public class Player {
 
 	//*public boolean moved = true;
 
-	public Player(Battlefield battlefield, ArtificialIntelligence artificialIntelligence) {
+	public Player(Battlefield battlefield, ArtificialIntelligence artificialIntelligence, boolean aiTest) {
 		if(artificialIntelligence == null){
 			new Window(800, 800, "Player", battlefield, true);
-		}else{
+		}else if(!aiTest){
 			new Window(800, 800, "AI", battlefield, false);
 		}
 		this.battlefield = battlefield;

@@ -3,9 +3,7 @@ package cz.educanet.tranformations.logic;
 import cz.educanet.tranformations.logic.models.Coordinate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class ArtificialIntelligence {
 
@@ -31,7 +29,7 @@ public class ArtificialIntelligence {
 		clearHeatMap();
 		generateHeatMap();
 		Coordinate c = chooseTile();
-		print();
+		//print();
 		if (!battlefield.evaluateAttack(c)) {
 			MyGame.winner = battlefield.getPlayer();
 		}
@@ -40,7 +38,6 @@ public class ArtificialIntelligence {
 		} else if(battlefield.getTileByCoordinate(c) == Field.tileType.SUNK && !contains(Field.tileType.HIT)){
 			mode = true;
 		}
-		System.out.println(mode);
 	}
 
 	public Coordinate chooseTile(){
@@ -60,11 +57,7 @@ public class ArtificialIntelligence {
 				}
 			}
 		}
-		for(Integer[] e: mostLikelyTilesToBeShip){
-			System.out.println("x,y: " + e[0] + ", " + e[1]);
-		}
 		int pos = (int) (Math.random() * mostLikelyTilesToBeShip.size());
-		System.out.println(pos);
 		return new Coordinate(mostLikelyTilesToBeShip.get(pos)[0],mostLikelyTilesToBeShip.get(pos)[1]);
 	}
 
@@ -78,9 +71,7 @@ public class ArtificialIntelligence {
 						boolean modeCondition;
 						if(mode){
 							modeCondition = canBeBuiltOnHeatMap(direction, x, y, size);
-							System.out.println("HUNT");
 						}else{
-							System.out.println("DESTROY");
 							modeCondition = overlayingHit(direction, x, y, size);
 						}
 						if (modeCondition) {
