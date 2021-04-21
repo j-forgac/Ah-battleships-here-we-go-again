@@ -1,7 +1,5 @@
 package cz.educanet.tranformations.logic;
 
-import cz.educanet.tranformations.presentation.Window;
-
 import java.util.Scanner;
 
 public class MyGame {
@@ -47,7 +45,7 @@ public class MyGame {
 					players[x-1] = new Player(battlefields[x-1], null);
 				} else if(playerType.equals("a")){
 					nonValid = false;
-					players[x-1] = new Player(battlefields[x-1], new ArtificialStupidity(battlefields[x-1]));
+					players[x-1] = new Player(battlefields[x-1], new ArtificialIntelligence(battlefields[x-1]));
 				}
 			}
 		}
@@ -60,6 +58,7 @@ public class MyGame {
 				}
 			}
 		}
+		System.out.println("Vsechny lode zniceny, vas pocet tahu: " + winner.getScore());
 	}
 }
 

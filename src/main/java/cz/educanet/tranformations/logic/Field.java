@@ -3,7 +3,7 @@ package cz.educanet.tranformations.logic;
 public class Field {
     tileType type;
     int dimensions;
-    String id = "0";
+    String id;
     public enum tileType {WATER, MISS, HIT, SHIP, UNKNOWN, SUNK}
 
     public Field (tileType type, int dimensions, String id){
@@ -16,11 +16,11 @@ public class Field {
     }
 
     public static Field createWater(){
-        return new Field(tileType.WATER);
+        return new Field(tileType.WATER,1,"0");
     }
 
     public static Field createMiss(){
-        return new Field(tileType.MISS);
+        return new Field(tileType.MISS,1,"0");
     }
 
     public static Field createHit(String id){
@@ -32,7 +32,7 @@ public class Field {
     }
 
     public static Field createSunk(){
-        return new Field(tileType.SUNK);
+        return new Field(tileType.SUNK,1,"0");
     }
 
 

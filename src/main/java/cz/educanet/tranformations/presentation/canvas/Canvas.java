@@ -1,6 +1,6 @@
 package cz.educanet.tranformations.presentation.canvas;
 
-import cz.educanet.tranformations.logic.ArtificialStupidity;
+import cz.educanet.tranformations.logic.ArtificialIntelligence;
 import cz.educanet.tranformations.logic.Battlefield;
 import cz.educanet.tranformations.logic.Field;
 import cz.educanet.tranformations.logic.MyGame;
@@ -11,10 +11,10 @@ import java.awt.*;
 
 public class Canvas extends JPanel {
 
-	private static int SCREEN_WIDTH;
-	private static int SCREEN_HEIGHT;
+	private int SCREEN_WIDTH;
+	private int SCREEN_HEIGHT;
 	private Battlefield battlefield;
-	private ArtificialStupidity artificialIntelligence;
+	private ArtificialIntelligence artificialIntelligence;
 
 	private int cellWidth;
 	private int cellHeight;
@@ -26,8 +26,6 @@ public class Canvas extends JPanel {
 		setBackground(Color.BLACK);
 		if (interact) {
 			addListener();
-		} else {
-
 		}
 
 	}
@@ -74,7 +72,6 @@ public class Canvas extends JPanel {
 			if (MyGame.winner == null && battlefield.getPlayer().isOnMove() && battlefield.getTileByCoordinate(c) == Field.tileType.UNKNOWN) {
 				if (!battlefield.evaluateAttack(c)) {
 					MyGame.winner = this.battlefield.getPlayer();
-					System.out.println("Vsechny lode zniceny, vas pocet tahu: " + battlefield.score);
 				}
 			}
 		}));

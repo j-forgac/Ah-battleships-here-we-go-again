@@ -2,32 +2,34 @@ package cz.educanet.tranformations.logic;
 
 import cz.educanet.tranformations.presentation.Window;
 
-import java.util.concurrent.TimeUnit;
-
 public class Player {
 	private Battlefield battlefield;
-	private ArtificialStupidity artificialStupidity;
+	private ArtificialIntelligence artificialIntelligence;
 	public boolean turn = false;
 
 	//*public boolean moved = true;
 
-	public Player(Battlefield battlefield, ArtificialStupidity artificialStupidity) {
-		if(artificialStupidity == null){
+	public Player(Battlefield battlefield, ArtificialIntelligence artificialIntelligence) {
+		if(artificialIntelligence == null){
 			new Window(800, 800, "Player", battlefield, true);
 		}else{
 			new Window(800, 800, "AI", battlefield, false);
 		}
 		this.battlefield = battlefield;
 		this.battlefield.setPlayer(this);
-		this.artificialStupidity = artificialStupidity;
+		this.artificialIntelligence = artificialIntelligence;
 	}
 
 	public boolean isOnMove() {
 		return this == MyGame.onMove;
 	}
 
-	public ArtificialStupidity getArtificialStupidity() {
-		return artificialStupidity;
+	public ArtificialIntelligence getArtificialStupidity() {
+		return artificialIntelligence;
+	}
+
+	public int getScore(){
+		return battlefield.score;
 	}
 
 	public void move() throws InterruptedException {

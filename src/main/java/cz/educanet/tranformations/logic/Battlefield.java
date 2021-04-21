@@ -9,9 +9,8 @@ public class Battlefield {
 	int height;
 	Field[][] battlefield;
 	public int score = 0;
-	boolean debugging = true;
+	boolean debugging = false;
 	HashMap<String, Integer> customBoats = new HashMap<>();
-	HashMap<String, Integer> notSunkShips = new HashMap<>();
 
 
 	public Battlefield(int dimensions) {
@@ -20,7 +19,6 @@ public class Battlefield {
 		customBoats.put("3a",3);
 		customBoats.put("3b",3);
 		customBoats.put("2a",2); //*only in descending order
-		notSunkShips = customBoats;
 		height = dimensions;
 		battlefield = new Field[height][height];
 
@@ -113,6 +111,7 @@ public class Battlefield {
 	}
 
 	public boolean evaluateAttack(Coordinate coordinate) {
+		draw();
 		//* shoots at coordinate
 		int attackCooX = coordinate.getX();
 		int attackCooY = coordinate.getY();
@@ -141,8 +140,9 @@ public class Battlefield {
 					for (int x = 0; x < height; x++) {
 						for (int y = 0; y < height; y++) {
 							if (battlefield[x][y].getId().equals(possibleSunkShipId) && battlefield[x][y].getType() == Field.tileType.HIT) {
+								customBoats.remove(battlefield[x][y].getId());
 								battlefield[x][y] = Field.createSunk();
-								notSunkShips.remove(battlefield[x][y].getId());
+								printShips();
 							}
 						}
 					}
@@ -187,10 +187,10 @@ public class Battlefield {
 
 	public void draw() {
 		if (debugging) {
-			for (Field[] fields : battlefield) {
+			for (int x = 0; x < battlefield.length; x++) {
 				System.out.println();
 				for (int y = 0; y < battlefield.length; y++) {
-					System.out.print(" " + fields[y].getType() + " " + fields[y].getDimensions());
+					System.out.print(" " + battlefield[y][x].getType() + " " + battlefield[y][x].getDimensions());
 				}
 			}
 		}
@@ -201,6 +201,13 @@ public class Battlefield {
 			if(player != this.player){
 				MyGame.onMove = player;
 			}
+		}
+	}
+
+	private void printShips(){
+		System.out.println("---------------------------------");
+		for(String id: customBoats.keySet()){
+			System.out.println("key: " + id + " value: " + customBoats.get(id));
 		}
 	}
 }
