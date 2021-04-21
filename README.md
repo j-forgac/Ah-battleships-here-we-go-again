@@ -7,3 +7,11 @@
 * Pozice a směr lodí se náhodně generuje
 * Až zlikvidujete všechny lodě, tak v terminalu bude váš počet tahů
 
+
+* AI:
+* Z 100 000 provedených testů je průměrný počet tahů na výhru 46
+* Testováno na klasických pravidlech:
+* Velikost pole 10
+* Velikosti lodí: 5, 4, 3, 3, 2
+* Benchmark si můžete sami spustit v AiBenchmark classe
+
