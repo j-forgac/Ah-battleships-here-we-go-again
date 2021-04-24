@@ -16,7 +16,7 @@ public class MyGame {
 		Scanner mySc = new Scanner(System.in);
 		int size = 0;
 		String playerType;
-		while (size < 5 || size > 200) {
+		while (size < 5 || size > 301) {
 			System.out.println("Zadejte vysku pole");
 			size = Integer.parseInt(mySc.nextLine());
 		}

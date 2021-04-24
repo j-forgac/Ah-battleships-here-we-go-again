@@ -31,8 +31,8 @@ public class Field {
         return new Field(tileType.SHIP, dimensions, id);
     }
 
-    public static Field createSunk(){
-        return new Field(tileType.SUNK,1,"0");
+    public static Field createSunk(String id){
+        return new Field(tileType.SUNK,1,id);
     }
 
 

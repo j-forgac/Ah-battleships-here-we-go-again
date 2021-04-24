@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class AiBenchmark {
 
-	public static int samples = 10000;
+	public static int samples = 10;
 
 	public static int size = 10;
 
@@ -43,16 +43,12 @@ public class AiBenchmark {
 			}
 		}
 
+		System.out.println("Samples: " + samples);
 		System.out.println("Average moves to win: " + totalMoves / samples);
 		if (samples % 2 != 0) {
 			System.out.println("Median = " + output2.get(samples / 2));
 		} else {
 			System.out.println("Median = " + ((output2.get(samples / 2) + output2.get(samples / 2)) / 2));
 		}
-
-
-
-
-
 	}
 }

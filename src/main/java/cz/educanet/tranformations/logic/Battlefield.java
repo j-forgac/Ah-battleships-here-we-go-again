@@ -37,6 +37,10 @@ public class Battlefield {
 		return this.player;
 	}
 
+	public int getCustomBoatsSize() {
+		return customBoats.size();
+	}
+
 	public void placeShips() {
 		boolean direction;
 		int maxBoatSize = Math.min(height, 5);
@@ -141,7 +145,7 @@ public class Battlefield {
 						for (int y = 0; y < height; y++) {
 							if (battlefield[x][y].getId().equals(possibleSunkShipId) && battlefield[x][y].getType() == Field.tileType.HIT) {
 								customBoats.remove(battlefield[x][y].getId());
-								battlefield[x][y] = Field.createSunk();
+								battlefield[x][y] = Field.createSunk(battlefield[x][y].getId());
 								//*printShips();
 							}
 						}
@@ -170,8 +174,8 @@ public class Battlefield {
 		return battlefield[coordinate.getY()][coordinate.getX()].getTypeUserSide();
 	}
 
-	public Field.tileType getRawTileByCoordinate(Coordinate coordinate) {
-		return battlefield[coordinate.getY()][coordinate.getX()].getType();
+	public String getTileID(Coordinate coordinate) {
+		return battlefield[coordinate.getY()][coordinate.getX()].getId();
 	}
 
 	private ArrayList<Coordinate> generateOrder(int uniqueElements) {

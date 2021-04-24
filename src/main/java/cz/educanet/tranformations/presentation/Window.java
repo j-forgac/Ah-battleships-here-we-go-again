@@ -22,7 +22,6 @@ public class Window extends JFrame {
         root.add(canvas);
 
         add(root);
-
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override

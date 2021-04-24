@@ -8,19 +8,22 @@ import cz.educanet.tranformations.logic.models.Coordinate;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 public class Canvas extends JPanel {
 
 	private int SCREEN_WIDTH;
 	private int SCREEN_HEIGHT;
 	private Battlefield battlefield;
-	private ArtificialIntelligence artificialIntelligence;
 
 	private int cellWidth;
 	private int cellHeight;
+	private final int shipCount;//* changes blue value to distinguish sunk ships that are touching
+	private HashMap<String, Integer> shipColors = new HashMap<>();
 
 	public Canvas(Battlefield battlefield, boolean interact) {
 		this.battlefield = battlefield;
+		this.shipCount = battlefield.getCustomBoatsSize();
 		SCREEN_WIDTH = battlefield.getHeight();
 		SCREEN_HEIGHT = battlefield.getHeight();
 		setBackground(Color.BLACK);
@@ -50,7 +53,10 @@ public class Canvas extends JPanel {
 					case UNKNOWN -> g.setColor(new Color(0, 102, 255));
 					case SUNK -> {
 						if ((MyGame.winner == null)) {
-							g.setColor(new Color(133, 233, 0));
+							if(shipColors.get(battlefield.getTileID(cell)) == null){
+								shipColors.put(battlefield.getTileID(cell),(int) (160 * ((double) battlefield.getCustomBoatsSize()/(double) shipCount)));
+							}
+							g.setColor(new Color(133, 233, shipColors.get(battlefield.getTileID(cell))));
 						} else {
 							g.setColor(new Color(0, 255, 0));
 						}
