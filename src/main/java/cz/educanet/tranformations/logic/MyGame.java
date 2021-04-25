@@ -10,9 +10,11 @@ public class MyGame {
 
 	public static Player winner = null;
 
-	public static Battlefield[] battlefields;
 
 	public static void main(String[] Args) throws InterruptedException {
+
+		//-----------------------GETTING-USER-INPUT-(SIZE-OF-FIELD)--------------------------//
+
 		Scanner mySc = new Scanner(System.in);
 		int size = 0;
 		String playerType;
@@ -20,20 +22,8 @@ public class MyGame {
 			System.out.println("Zadejte vysku pole");
 			size = Integer.parseInt(mySc.nextLine());
 		}
-		Battlefield pole1 = new Battlefield(size);
-		pole1.placeShips();
 
-		Battlefield pole2 = new Battlefield(size);
-		pole2.placeShips();
-
-		battlefields = new Battlefield[]{
-				pole1,
-				pole2,
-		};
-
-		//--------------------------------------------------------//
-
-
+		//-----------------------GETTING-USER-INPUT-(PLAYER-TYPES)-------------------------//
 
 		for (int x = 1; x < 3; x++) {
 			boolean nonValid = true;
@@ -42,13 +32,20 @@ public class MyGame {
 				playerType = mySc.nextLine();
 				if(playerType.equals("h")){
 					nonValid = false;
-					players[x-1] = new Player(battlefields[x-1], null, false);
+					Battlefield pole1 = new Battlefield(size);
+					pole1.placeShips();
+					players[x-1] = new Player(pole1, null, false);
 				} else if(playerType.equals("a")){
 					nonValid = false;
-					players[x-1] = new Player(battlefields[x-1], new ArtificialIntelligence(battlefields[x-1]), false);
+					Battlefield pole2 = new Battlefield(size);
+					pole2.placeShips();
+					players[x-1] = new Player(pole2, new ArtificialIntelligence(pole2), false);
 				}
 			}
 		}
+
+
+		//---------------------GAME-CYCLE--------------------------//
 
 		onMove = players[0];
 		while (MyGame.winner == null) {
